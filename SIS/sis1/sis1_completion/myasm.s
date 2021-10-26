@@ -14,13 +14,81 @@ do_Str:                        	; functions are defined as labels
 ;;;;;;;;;;;;;;;; FUNCTION EFFECTIVE CODE STARTS HERE ;;;;;;;;;;;;;;;; 
 
 	mov	dword [an], 0		; initialize answer
-	label_here:
+	checking_loop:
+                
+                ; Check if left bracket
+                cmp byte [ecx], '('
+                je .changeLeftBracket
+                jg .isRightBracket
+                jmp .ifOtherSymbol
 
-   		; Your code goes somewhere around here...
+                .changeLeftBracket:
+                inc dword [an]
+                mov dword [ecx], '<'
+                jmp .continue
+
+                .isRightBracket:
+                cmp byte [ecx], ')'
+                je .changeRightBracket
+                jg .checkLetters
+                jmp .ifOtherSymbol
+
+                .changeRightBracket:
+                inc dword [an]
+                mov dword [ecx], '>'
+                jmp .continue
+
+                .incAn:
+                inc dword [an]
+                jmp .continue   
+
+                .ifNum:
+                cmp byte [ecx], '0'
+                jge .NumIsGreater
+                jmp .ifOtherSymbol
+
+                .elseIfNum:
+                cmp byte [ecx], '9'
+                jle .incAn
+                jmp .checkLetters 
+
+                .NumbersInc:
+                inc dword [an]
+                jmp .continue
+
+                .checkLetters:
+                cmp byte [ecx], 'a'
+                jge .letterIsGreater
+                jmp .continue
+
+                .letterIsGreater:
+                cmp byte [ecx], 'z'
+                jle .lettersInc
+                jmp .continue
+
+                .lettersInc:
+                sub dword [ecx], 32
+                jmp .continue
+
+                .ifOtherSymbol
+                cmp byte [ecx], 32
+                jge .elseIfOtherSymbol
+                jmp .continue
+                
+                .elseIfOtherSymbol
+                cmp byte [ecx], 126
+                jle .incAn
+
+                .continue:
+                inc	ecx              		; increment pointer
+                        cmp	byte [ecx], 0    		; check if byte pointed to is zero
+                        jnz	checking_loop       		; keep looping until it is null terminated
+
+                ; Destroying Stack
 
 		inc ecx      	    ; increment pointer
 		cmp byte [ecx], 0   ; check if byte pointed to is zero
-		jnz label_here      ; keep looping until it is null terminated
+		jnz checking_loop   ; keep looping until it is null terminated
 
 
 ;;;;;;;;;;;;;;;; FUNCTION EFFECTIVE CODE ENDS HERE ;;;;;;;;;;;;;;;; 

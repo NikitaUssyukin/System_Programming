@@ -1,5 +1,5 @@
 #include <stdio.h>
-# define MAX_LEN 100     /* Maximal line size */
+#define MAX_LEN 100     /* Maximal line size */
 
 extern int do_Str (char*);
 

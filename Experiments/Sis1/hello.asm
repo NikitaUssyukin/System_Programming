@@ -1,21 +1,21 @@
 ; ----------------------------------------------------------------------------------------
-; Writes "Hello, World" to the console using only system calls. Runs on 64-bit macOS only.
+; Writes "Hello, World" to the console using only system calls. Runs on 64-bit Linux only.
 ; To assemble and run:
 ;
-;     nasm -fmacho64 hello.asm && ld hello.o && ./a.out
+;     nasm -felf64 hello.asm && ld hello.o && ./a.out
 ; ----------------------------------------------------------------------------------------
 
-          global    start
+          global    _start
 
           section   .text
-start:    mov       rax, 0x02000004         ; system call for write
+_start:   mov       rax, 1                  ; system call for write
           mov       rdi, 1                  ; file handle 1 is stdout
           mov       rsi, message            ; address of string to output
-          mov       rdx, 13                 ; number of bytes
+          mov       rdx, 13                 ; number of bytes (that will store our meassage and a newline)
           syscall                           ; invoke operating system to do the write
-          mov       rax, 0x02000001         ; system call for exit
+          mov       rax, 60                 ; system call for exit
           xor       rdi, rdi                ; exit code 0
           syscall                           ; invoke operating system to exit
 
           section   .data
-message:  db        "Hello, World", 10      ; note the newline at the end
+message:  db        "Hello, World", 10      ; note the newline at the end 10 (5 bytes for Hello, 1 byte for ',', 1 byte for space and 5 bytes for World and 1 byte for the newline)
